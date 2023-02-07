@@ -1,0 +1,69 @@
+<!doctype html>
+<html>
+<head>
+  <meta name="chatgpt" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"  charset="utf-8"/>
+  <title>Chat 好奇兔</title>
+  <link rel="shortcut icon" href="/static/rabbit.png" type="image/x-icon" />
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">Chat 好奇兔</a>
+    <p></p>
+  </nav>
+
+  <div class="container mt-5">
+    <div class="row">
+      <div class="col-md-6 offset-md-3">
+        <form>
+          <div class="form-group">
+            <label for="input">请输入你感兴趣的内容:</label>
+            <p></p>
+            <p></p>
+            <input type="text" class="form-control" id="input" value="">
+
+          </div>
+          <button type="submit" class="btn btn-primary btn-block">Submit</button>
+        </form>
+
+        <div id="response" class="mt-3">
+          <!-- Response will be displayed here -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    $("form").submit(function(event) {
+      event.preventDefault(); // Prevent the form from submitting
+
+      var input = $("#input").val(); // Get the input value from the form
+
+      function wait_loading() {
+        var html = ' <div id="wait_loading" style="position: fixed;top:30%;right:0;left: 0;margin:0 auto;width: 7rem;z-index: 999;text-align: center">'
+         +' <img style="width: 40%" src="/static/loading2.gif" style="opacity: 0.2" alt="">'
+         +'<p style="color: rgba(187,187,187,0.91);font-size:1.2rem ">TODAY...</p></div>';
+        $(document.body).append(html);
+        }
+
+      function remove_loading() {
+      $("#wait_loading").remove();
+      }
+
+      // Send a POST request to the backend with the input value as data
+      $.ajax({
+        type: "POST",
+        url: "http://127.0.0.1:5000/chat",
+        data: JSON.stringify({input: input}),
+        contentType: "application/json",
+        beforeSend: wait_loading(),
+        success: function(result) {
+          remove_loading();
+        $("#response").html(result);
+        }
+      })
+    });
+  </script>
+</body>'
+</html>
